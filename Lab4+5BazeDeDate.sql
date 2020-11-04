@@ -39,8 +39,7 @@ Exercitii
 3)SELECT DISTINCT c.titlu_curs FROM cursuri c JOIN note n ON c.id_curs=n.id_curs WHERE n.valoare<=8;
 4)SELECT DISTINCT s.nume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol WHERE n.valoare>=8;
 5)SELECT s.nume,s.prenume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE TO_CHAR(n.data_notare,'day','NLS_DATE_LANGUAGE=romanian')='marți' AND c.id_curs=23 AND (n.valoare=7 OR n.valoare=10);
-SELECT s.nume,s.prenume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE TO_CHAR(n.data_notare,'day')='tuesday' AND c.id_curs=23 AND (n.valoare=7 OR n.valoare=10);
-SELECT s.nume,s.prenume FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE TO_CHAR(n.data_notare,'day')='tuesday' AND c.titlu_curs='OOP' AND (n.valoare=7 OR n.valoare=10);
+select nume, prenume, to_char(data_notare,'day'), valoare, titlu_curs from studenti s join note n on s.nr_matricol=n.nr_matricol join cursuri c on c.id_curs=n.id_curs where titlu_curs='OOP' and valoare in (7,10)and to_char(data_notare,'day') like '%tuesday%';
 6)SELECT s.nume,s.prenume,n.valoare,c.titlu_curs,TO_CHAR(n.data_notare,'MONTH')||' '||extract(Year FROM n.data_notare) FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE n.valoare>5;
 
 SELECT s.nume,s.prenume,n.valoare,c.titlu_curs,TO_CHAR(n.data_notare,'MONTH')||' '||extract(Year FROM n.data_notare)||' + ' FROM studenti s JOIN note n ON s.nr_matricol=n.nr_matricol JOIN cursuri c ON n.id_curs=c.id_curs WHERE n.valoare>=5 AND extract(Month FROM n.data_notare)=2
