@@ -1,0 +1,54 @@
+1)select s1.nume,s1.prenume from studenti s1 where EXISTS (select s2.nume,s2.prenume from studenti s2 WHERE s1.data_nastere>s2.data_nastere AND s1.an=s2.an AND s1.nr_matricol<>s2.nr_matricol) ORDER BY nume,prenume;
+2)select s1.nume,s1.prenume,avg(n1.valoare) FROM studenti s1 join note n1 on s1.nr_matricol=n1.nr_matricol GROUP BY s1.nr_matricol,nume,prenume,an having avg(valoare)>=ALL(select avg(valoare) FROM studenti s2 join note n2 on s2.nr_matricol=n2.nr_matricol WHERE s1.an=s2.an GROUP BY s2.nr_matricol);
+3)
+select s.nume,s.prenume,s.grupa FROM studenti s 
+join note n on s.nr_matricol=n.nr_matricol  
+GROUP BY s.nr_matricol,s.nume,s.prenume,s.grupa,s.an 
+having avg(n.valoare)>=
+ALL(select avg(n1.valoare) from studenti s1 
+join note n1 on s1.nr_matricol=n1.nr_matricol
+WHERE  s1.an=s.an AND s1.grupa=s.grupa 
+GROUP BY s1.nr_matricol,s1.an);
+
+
+4)
+
+
+select distinct s.nume,s.prenume,s.an,s.grupa from studenti s 
+join note n on s.nr_matricol=n.nr_matricol  
+WHERE EXISTS 
+(select * FROM studenti s1
+ join note n1 on s1.nr_matricol=n1.nr_matricol
+ WHERE n1.valoare = n.valoare AND s.nr_matricol <> s1.nr_matricol AND s1.an = s.an AND n.id_curs=n1.id_curs);
+
+
+5)
+
+
+
+select s.nume,s.prenume,s.grupa,s.an FROM studenti s 
+WHERE NOT EXISTS 
+(select s1.nume,s1.prenume,s1.grupa,s.an from studenti s1
+where s.nr_matricol<>s1.nr_matricol AND s.grupa=s1.grupa AND s.an=s1.an);
+
+
+6)
+
+select (p.nume),(p.prenume),avg(n.valoare) FROM profesori p
+join didactic d on p.id_prof=d.id_prof
+join note n on d.id_curs=n.id_curs 
+GROUP BY p.id_prof,p.nume,p.prenume 
+having avg(n.valoare)=
+SOME( select avg(n1.valoare) FROM profesori p1
+join didactic d1 on p1.id_prof=d1.id_prof
+join note n1 on d1.id_curs=n1.id_curs WHERE p.id_prof<>p1.id_prof GROUP BY p1.id_prof);
+
+
+7)
+
+select s1.nume, s1.prenume, (select avg(valoare) from note where nr_matricol=s1.nr_matricol) as media from studenti s1;
+select s.nume,s.prenume,(select avg(n.valoare) from note n where n.nr_matricol=s.nr_matricol GROUP BY n.nr_matricol) FROM studenti s;
+
+
+8)select titlu_curs,an,credite FROM cursuri WHERE (credite,an)IN( select max(credite),an from cursuri group by an);
+ select c.titlu_curs,c.an,c.credite FROM cursuri c WHERE NOT EXISTS (select * from cursuri c2 WHERE c.id_curs<>c2.id_curs AND c2.credite>c.credite AND c.an=c2.an);
