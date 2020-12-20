@@ -1,0 +1,19 @@
+1)UPDATE studenti s 
+SET bursa=500 WHERE EXISTS(select n.valoare from note n WHERE n.nr_matricol=s.nr_matricol AND n.valoare=10);
+
+2)UPDATE studenti s 
+SET bursa=100*(select avg(n.valoare) from note n WHERE n.nr_matricol=s.nr_matricol GROUP BY n.nr_matricol);
+
+3)UPDATE note n
+SET n.valoare=n.valoare*(select credite from cursuri c WHERE c.id_curs=n.id_curs);
+
+UPDATE note n
+SET n.valoare=n.valoare*(select credite from cursuri c WHERE c.id_curs=n.id_curs)
+WHERE EXISTS (select n.valoare FROM note n WHERE n.valoare IS NOT NULL);
+
+
+4)
+
+DELETE FROM studenti s 
+where s.nr_matricol not in(select nr_matricol FROM note);
+
