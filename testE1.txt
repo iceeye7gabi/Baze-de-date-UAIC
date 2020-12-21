@@ -1,0 +1,13 @@
+test E1
+
+1)select count(distinct grupa) FROM studenti;
+
+2)select s.nume,s.prenume,avg(n.valoare) from studenti s join note n on s.nr_matricol=n.nr_matricol WHERE n.valoare>=5 GROUP BY s.nr_matricol,s.nume,s.prenume;
+
+
+3)select * from (select nume,prenume,avg(valoare) FROM studenti natural join note group by nr_matricol,nume,prenume ORDER BY avg(valoare) DESC) WHERE ROWNUM=1;
+
+4)select * from (select distinct bursa from studenti WHERE bursa is not null ORDER BY bursa DESC) WHERE ROWNUM<3;
+
+5) UPDATE note n 
+SET valoare=valoare*(select c.credite from cursuri c where n.id_curs=c.id_curs);

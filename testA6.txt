@@ -1,0 +1,21 @@
+test A6)
+
+
+1)select count(grupa) FROM studenti; ??
+  select count(distinct grupa) FROM studenti;
+
+2)select grupa,count(*),count(bursa) FROM studenti GROUP BY grupa,an having count(bursa)>=2;
+
+3) select s.nume,s.prenume,count(n.valoare) numarare FROM studenti s join note n on s.nr_matricol=n.nr_matricol GROUP BY s.nr_matricol,s.nume,s.prenume having count(n.valoare)=6;
+
+4)select * from (select nume, prenume,bursa from studenti WHERE bursa is not null ORDER BY bursa,an ) where rownum<4;
+
+5)UPDATE cursuri c
+SET c.credite=
+10-FLOOR(
+(select avg(valoare) FROM note n 
+join cursuri c1 on n.id_curs=c1.id_curs where c1.id_curs=c.id_curs GROUP BY n.id_curs));
+
+select 10-FLOOR(avg(valoare)) FROM note n 
+join cursuri c1 on n.id_curs=c1.id_curs 
+where c1.id_curs=21;
