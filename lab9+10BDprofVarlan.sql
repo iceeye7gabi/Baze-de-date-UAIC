@@ -37,7 +37,17 @@ select s1.nr_matricol, nume, prenume, (select titlu_curs from cursuri where id_c
 
 3) select nume, prenume, avg(valoare), an, grupa from studenti s1 join note n1 on s1.nr_matricol=n1.nr_matricol group by s1.nr_matricol, nume, prenume, an, grupa having avg(valoare) >= ALL(select avg(valoare) from studenti s2 join note n2 on s2.nr_matricol=n2.nr_matricol where s1.an=s2.an and s1.grupa=s2.grupa group by s2.nr_matricol);
 
-4) select nume, prenume, avg(valoare), an, grupa from studenti s1 join note n1 on s1.nr_matricol=n1.nr_matricol group by s1.nr_matricol, nume, prenume, an, grupa having avg(valoare) >= ALL(select avg(valoare) from studenti s2 join note n2 on s2.nr_matricol=n2.nr_matricol where s1.an=s2.an and s1.grupa=s2.grupa group by s2.nr_matricol);
+4) CORELAT
+select distinct s.nume,s.prenume,s.an,s.grupa FROM studenti s join note n on s.nr_matricol=n.nr_matricol 
+WHERE EXISTS(select 1 from studenti s1 join note n1 on s1.nr_matricol=n1.nr_matricol 
+WHERE s.an=s1.an AND n.valoare=n1.valoare);
+
+NECORELAT
+select distinct s.nume,s.prenume,s.an,s.grupa FROM studenti s 
+join note n on s.nr_matricol=n.nr_matricol GROUP BY s.nr_matricol,s.nume,s.prenume,s.an,s.grupa,n.valoare
+having n.valoare=
+(select distinct n.valoare from studenti s1 join note n1 on s1.nr_matricol=n1.nr_matricol
+WHERE s.an=s1.an AND n.valoare=n1.valoare GROUP BY s1.nr_matricol) ;
 
 5) select * from studenti s1 where not exists (select 'ceva' from studenti s2 where s1.nr_matricol<>s2.nr_matricol and s1.an=s2.an and s1.grupa=s2.grupa);
 
