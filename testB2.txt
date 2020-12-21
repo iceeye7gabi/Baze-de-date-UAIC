@@ -1,0 +1,20 @@
+1)select count(*),count(distinct an) FROM studenti;
+2)
+
+UPDATE studenti s
+SET bursa=50*(select avg(n.valoare) FROM note n
+WHERE s.nr_matricol=n.nr_matricol GROUP BY n.nr_matricol)
+WHERE NOT EXISTS(select n1.valoare from note n1 WHERE n1.nr_matricol=s.nr_matricol
+AND n1.valoare<5) AND s.an>1;
+3)
+
+select grupa FROM studenti 
+group by grupa,an having count(*)=(select max(count(*)) FROM studenti 
+GROUP BY grupa);
+4)
+
+select * from(select s.nume,s.prenume,n.valoare FROM studenti s join note n on s.nr_matricol=n.nr_matricol 
+WHERE n.id_curs=24 ORDER BY n.valoare DESC,s.nume ASC,s.prenume ASC) where rownum<4;
+
+5)
+select nume,count(nume) FROM studenti GROUP BY nume having count(nume)>1;
